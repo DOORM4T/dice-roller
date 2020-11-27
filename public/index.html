@@ -1,11 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/sketchy/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/11be5056fc.js" crossorigin="anonymous"></script>
+
+    <!-- chance.js-->
+    <script src="https://cdn.jsdelivr.net/npm/chance@1.1.7/chance.min.js"></script>
     <title>Roller</title>
 </head>
-<body>
-    
+
+<body style="max-height:100vh; background-color:#ddd">
+    <!-- Alert Component -->
+    <div class="alert alert-dismissible alert-warning fixed-top m-2 invisible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4 class="alert-heading">Warning!</h4>
+        <p class="mb-0">Warning message</p>
+    </div>
+
+    <main class="mx-auto" style="max-width: 650px">
+        <!-- title & mute toggle -->
+        <div class="d-flex flex-row mt-2">
+            <h1 class="text-center">Dice Roller</h1>
+            <div class="col form-check my-auto">
+                <label class="form-check-label" for="mute-sound">
+                    <input checked class="form-check-input d-none" type="checkbox" name="mute-sound" id="mute-sound">
+                    <i id="mute-icon" class="fas fa-volume-mute h4 d-inline"></i>
+                    <i id="sound-icon" class="fas fa-volume-up h5 d-none"></i>
+                </label>
+            </div>
+        </div>
+
+        <!-- dice action -->
+        <section class="container bg-light shadow-sm">
+            <div class="p-3 container-fluid mw-50 d-flex flex-wrap justify-content-center">
+                <i class="h1 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                <i class="h1 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                <i class="h1 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                <i class="h1 fas fa-dice-d20 text-danger text-large mx-2"></i>
+            </div>
+            <!-- Roll Results -->
+            <p id="rolls-sum" class="h1 text-right text-dark underline overflow-auto" style="max-height:50px">0</p>
+        </section>
+        <section class="p-4 my-3 container bg-light shadow-sm text-center">
+            <div class="row m">
+                <div class="col"><button id="roll-button" class="h6 btn btn-success px-3">Roll</button></div>
+                <div class="col"><button id="add-button" class="h6 btn btn-info px-3">Add</button></div>
+                <div class="col"><button id="clear-button" class="h6 btn btn-danger px-3">Clear</button></div>
+            </div>
+            <div class="row mt-3 d-flex justify-content-evenly">
+                <div class="col"><button class="die-selector btn btn-outline-dark shadow-sm"
+                        data-die-sides="4">d4</button>
+                </div>
+                <div class="col"><button class="die-selector btn btn-outline-dark shadow-sm"
+                        data-die-sides="6">d6</button>
+                </div>
+                <div class="col"><button class="die-selector btn btn-outline-dark shadow-sm"
+                        data-die-sides="8">d8</button>
+                </div>
+                <div class="col"><button class="die-selector btn btn-outline-dark shadow-sm"
+                        data-die-sides="10">d10</button>
+                </div>
+            </div>
+            <div class="row mt-3 d-flex justify-content-evenly">
+                <div class="col"><button class="die-selector btn btn-outline-dark shadow-sm"
+                        data-die-sides="12">d12</button>
+                </div>
+                <div class="col"><button class="die-selector btn btn-dark shadow-lg" data-die-sides="20">d20</button>
+                </div>
+                <div class="col"><button class="die-selector btn btn-outline-dark shadow-sm"
+                        data-die-sides="100">d100</button>
+                </div>
+                <div class="col">
+                    <button id="custom-die" class="btn btn-outline-dark shadow-sm d-flex flex-row flex-nowrap mx-auto"
+                        style="max-width:90px">
+                        d<input class="ml-1 w-100 h-25" type="number" placholder="x"></input>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- dice history -->
+        <section class="p-3 my-5 container bg-light shadow-sm">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="h4">History</th>
+                        <th class="h4">Details</th>
+                        <th class="h4">Total</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1 Minute Ago</td>
+                        <td class="col-5">
+                            <i class="h3 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                            <i class="h3 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                            <i class="h3 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                            <i class="h3 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                            <i class="h3 fas fa-dice-d20 text-danger text-large mx-2"></i>
+                        </td>
+                        <td>24</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+
+    <!-- Hidden. Play when user rolls a die/dice -->
+    <audio id="sfx">
+        <source src="./assets/sounds/dice1.mp3" type="audio/mpeg">
+        </source>
+        <source src="./assets/sounds/dice2.mp3" type="audio/mpeg">
+        </source>
+        <source src="./assets/sounds/dice3.mp3" type="audio/mpeg">
+        </source>
+        <source src="./assets/sounds/dice4.mp3" type="audio/mpeg">
+        </source>
+    </audio>
+
+    <div id="templates">
+
+    </div>
+
+    <script src="./js/audio.js"></script>
+    <script src="./js/dice.js"></script>
 </body>
+
 </html>
