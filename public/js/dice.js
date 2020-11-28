@@ -1,13 +1,35 @@
 let selectedDieSides = 20
 let results = []
+let previousResults = []
+let numToRoll = 1
+let numTimes = 1
 
-const sumLabel = document.getElementById("rolls-sum")
 const dieSelectors = document.querySelectorAll(".die-selector")
 const customDie = document.getElementById("custom-die")
 const customDieSidesInput = customDie.querySelector("input")
 const allSelectors = [...dieSelectors, customDie]
+const numDieInput = document.getElementById("num-die-input")
+const numTimesInput = document.getElementById("num-times-input")
 
-/* preset dice */
+/* NUM DIE INPUT */
+numDieInput.addEventListener("click", () => {
+  numDieInput.select()
+})
+numDieInput.addEventListener("change", () => {
+  const num = Number(numDieInput.value)
+  numToRoll = num
+})
+
+/* NUM TIMES INPUT */
+numTimesInput.addEventListener("click", () => {
+  numTimesInput.select()
+})
+numTimesInput.addEventListener("change", () => {
+  const num = Number(numTimesInput.value)
+  numTimes = num
+})
+
+/* PRESENT DICE BUTTONS */
 dieSelectors.forEach((selector) => {
   selector.addEventListener("click", () => {
     const sides = Number(selector.dataset["dieSides"])
@@ -17,60 +39,69 @@ dieSelectors.forEach((selector) => {
   })
 })
 
-/* custom die */
+/* CUSTOM DIE BUTTON */
+/* select the custom die option upon button click */
 customDie.addEventListener("click", () => {
   highlightSelector(customDie)
   const sides = Number(customDieSidesInput.value)
-  customDieSidesInput.select()
+  console.log(sides)
   selectedDieSides = 0
   if (!sides) return
   selectedDieSides = sides
 })
-customDieSidesInput.addEventListener("keypress", () => {
+
+/* highlight the custom die option button and the input when the input is clicked */
+customDieSidesInput.addEventListener("change", () => {
   const sides = Number(customDieSidesInput.value)
   if (!sides) return
   selectedDieSides = sides
   highlightSelector(customDie)
 })
+
+/* highlight the custom die option and input when the input is clicked */
 customDieSidesInput.addEventListener("click", () => {
   customDieSidesInput.select() /* select all text when the input is clicked  */
   highlightSelector(customDie)
 })
 
-/* action buttons */
+/* ACTION BUTTONS */
 const rollButton = document.getElementById("roll-button")
 const addButton = document.getElementById("add-button")
 const clearButton = document.getElementById("clear-button")
 
+/* roll a dice, clearing prior results */
 rollButton.addEventListener("click", () => {
-  results = []
-  result = dX(selectedDieSides)
-  /* stop upon invalid roll */
-  if (result <= 0) return
-
-  results.push(result)
-  sumLabel.textContent = getSum(results)
-  playRandomSound()
+  for (let rollNum = 0; rollNum < numTimes; rollNum++) {
+    results = []
+    previousResults = []
+    rollDie()
+    addItem(results, getSum(results), selectedDieSides)
+  }
 })
 
+/* roll an additional die, adding the result to the existing results */
 addButton.addEventListener("click", () => {
-  result = dX(selectedDieSides)
-  /* stop upon invalid roll */
-  if (result <= 0) return
-
-  results.push(result)
-  const breakdown = results.join(" + ")
-  const resultText = `${breakdown} = ${getSum(results)}`
-  sumLabel.textContent = resultText
-  sumLabel.scrollTo({ top: sumLabel.scrollHeight })
-  playRandomSound()
+  const previousSum = getSum(results)
+  previousResults.push(previousSum)
+  results = []
+  for (let rollNum = 0; rollNum < numTimes; rollNum++) {
+    rollDie()
+  }
+  const newSum = getSum(previousResults) + getSum(results)
+  const sumString = `${previousResults.join(" + ")} + ${getSum(
+    results,
+  )} = ${newSum}`
+  addItem(results, sumString, selectedDieSides)
 })
 
+/* clear roll results */
 clearButton.addEventListener("click", () => {
   results = []
-  sumLabel.textContent = 0
+  previousResults = []
+  clearItems()
 })
 
+/* FUNCTIONS */
 /**
  * Rolls a die with some number of sides
  * @param {number} sides number of sides on the die
@@ -86,11 +117,10 @@ function dX(sides) {
 }
 
 /**
- * @returns sum of an array of numbers
- * @param {number[]} numbers
+ * @returns sum of results
  */
-function getSum(numbers) {
-  return numbers.reduce((prev, next) => prev + next, 0)
+function getSum(results) {
+  return results.reduce((prev, next) => prev + next, 0)
 }
 
 /**
@@ -108,5 +138,18 @@ function highlightSelector(dieSelector) {
   dieSelector.classList.add("btn-dark")
   dieSelector.classList.add("shadow-lg")
   dieSelector.classList.add("text-light")
-  console.log(dieSelector)
+}
+
+/**
+ * Roll dice based on dice rolling parameters
+ */
+function rollDie() {
+  for (let i = 0; i < numToRoll; i++) {
+    result = dX(selectedDieSides)
+    /* stop upon invalid roll */
+    if (result <= 0) return
+
+    results.push(result)
+    if (i < 10) playRandomSound()
+  }
 }
