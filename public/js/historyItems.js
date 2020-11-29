@@ -28,16 +28,14 @@ function addItem(values, sum, sides = 20) {
   let item = historyItemTemplate
   if (sides) item = item.replace("$sum", sum)
   item = item.replace("$icons", icons)
-  // TODO: Insert child instead of rerendering constantly
 
+  /* insert item at the top of the history list */
   let liItem = document.createElement("LI")
-  console.log(item.attributes)
-  liItem.innerHTML = item.substring(
-    item.indexOf(">") + 1,
-    item.lastIndexOf("<"),
-  )
+  const itemHTML = item.substring(item.indexOf(">") + 1, item.lastIndexOf("<"))
+  liItem.innerHTML = itemHTML
   liItem.setAttribute("class", itemClassnames)
   rollsHistory.insertBefore(liItem, rollsHistory.childNodes[0])
+  rollsHistory.scrollTo({ top: 0 })
 }
 
 /**

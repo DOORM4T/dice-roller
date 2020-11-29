@@ -36,34 +36,42 @@
                 <!-- Num Dice Input -->
                 <span class="">
                     <label for="num-die-input" class="d-block m-0"># Dice</label>
-                    <input id="num-die-input" class="rounded pl-3 text-center w-50" type="number" min=1 value=1
+                    <input id="num-die-input" class="rounded pl-3 text-center w-50" type="number" min="1" value="1"
                         style="outline:none"></input>
                 </span>
                 <!-- Num Times to Roll -->
                 <span class="">
                     <label for="num-times-input" class="d-block m-0"># Times</label>
-                    <input id="num-times-input" class=" rounded pl-3 text-center w-50" type="number" min=1 value=1
+                    <input id="num-times-input" class=" rounded pl-3 text-center w-50" type="number" min="1" value="1"
                         style="outline:none"></input>
                 </span>
             </div>
 
             <!-- Select d4, d6, d8, d10 -->
             <div class="col btn-group w-75 mt-4" role="group" aria-label="Choose d4, d6, d8, or d10">
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="4">d4</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="6">d6</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="8">d8</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="10">d10</button>
+                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="4"><img
+                        src="./assets/dice/d4-empty.svg" width=32><br>d4</button>
+                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="6"><img
+                        src="./assets/dice/d6-empty.svg" width=32><br>d6</button>
+                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="8"><img
+                        src="./assets/dice/d8-empty.svg" width=32><br>d8</button>
+                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="10"><img
+                        src="./assets/dice/d10-empty.svg" width=32><br>d10</button>
             </div>
             <!-- Select d12, d20, d100, dY -->
             <div class="col btn-group mt-4 w-75" role="group" aria-label="Choose d12, d20, d100, or dX">
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="12">d12</button>
-                <button class="die-selector btn btn-dark shadow-lg" data-die-sides="20">d20</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="100">d100</button>
+                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="12"><img
+                        src="./assets/dice/d12-empty.svg" width=32><br>d12</button>
+                <button class="die-selector btn btn-dark shadow-lg" data-die-sides="20"><img
+                        src="./assets/dice/d20-empty.svg" width=32><br>d20</button>
+                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="100"><img
+                        src="./assets/dice/d10-empty.svg" width=32><img src="./assets/dice/d10-empty.svg"
+                        width=32><br>d100</button>
                 <!-- Custom Die Button, with Input -->
-                <button id="custom-die" class="btn btn-outline-dark shadow-sm d-flex flex-row flex-nowrap"
+                <button id="custom-die" class="mt-4mx-auto btn btn-outline-dark shadow-sm d-flex flex-row flex-nowrap"
                     style="max-width:90px">
                     <label class="my-auto">d</label>
-                    <input class="ml-1 w-100 h-100" type="number" min=2 value=2></input>
+                    <input class="ml-1 w-100 h-50 my-auto" type="number" min=2 value=2></input>
                 </button>
             </div>
 
@@ -82,7 +90,8 @@
         <!-- Roll Results -->
         <section class="container bg-dark shadow-sm p-0">
             <h2 class="text-center border-bottom border-dark bg-light">Results</h2>
-            <ul id="rolls-history-list" class="list-unstyled text-right text-dark underline">
+            <ul id="rolls-history-list" class="list-unstyled text-right text-dark underline overflow-auto"
+                style="height:250px">
             </ul>
         </section>
 
@@ -100,29 +109,24 @@
 
         <!-- Reusable Elements -->
         <div id="templates">
-            <!-- Dice Icons -->
-            <!-- <template id="dice-icon-template">
-                <i class="h1 fas fa-dice-d20 text-danger text-large mx-2"></i>
-            </template> -->
-
             <!-- History List Item -->
             <template id="history-item-template">
-                <li class="history-item d-flex flex-row border-light border-bottom py-2">
-                    <div class="history-dice-icons text-center">
+                <li class="history-item d-flex flex-row justify-content-end border-light border-bottom py-2">
+                    <div class="history-dice-icons text-center mx-5">
                         $icons
                     </div>
-                    <p class="history-sum ml-auto pl-5 pr-2 text-light" style="font-size:32px">$sum</p>
+                    <p class="history-sum ml-auto mx-5 pr-2 text-light" style="font-size:32px">$sum</p>
                 </li>
             </template>
 
             <!-- Dice Icon with a Number -->
             <template id="dice-icon-template">
-                <span style="position:relative">
+                <span class="position-relative flex flex-row justify-content-between">
                     <span>
                         $src
                     </span>
                     <label
-                        style="font-size: 32px; text-align: center; letter-spacing: 2px; color:white; position:absolute; left:50%; top:50%;transform:translate(-48%,-45%)">$value
+                        style="font-size: 32px; letter-spacing: 2px; color:white; position:absolute; left:50%; top:50%;transform:translate(-48%,-45%)">$value
                     </label>
                 </span>
             </template>

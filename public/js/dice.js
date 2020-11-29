@@ -88,9 +88,9 @@ addButton.addEventListener("click", () => {
     rollDie()
   }
   const newSum = getSum(previousResults) + getSum(results)
-  const sumString = `${previousResults.join(" + ")} + ${getSum(
+  const sumString = `${newSum}<br> = ${getSum(
     results,
-  )} = ${newSum}`
+  )} + <span style="color:#AAA">${previousResults.join(" + ")}</span>`
   addItem(results, sumString, selectedDieSides)
 })
 
