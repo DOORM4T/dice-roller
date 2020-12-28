@@ -11,9 +11,9 @@ const itemClassnames =
 /**
  * Adds an item to the results list
  * @param {number[]} values array of dice results
- * @param {number} sum sum of all dice results
+ * @param {number} sides number of sides on the die
  */
-function addItem(values, sum, sides = 20) {
+function addItem(values, sides = 20, additionalElement = "") {
   const icons = values
     .map((value) => {
       let template = diceIconTemplate.replace("$value", value)
@@ -26,7 +26,10 @@ function addItem(values, sum, sides = 20) {
     })
     .join("")
   let item = historyItemTemplate
-  if (sides) item = item.replace("$sum", sum)
+
+  /* show an additional HTML element (for added rolls) or a sum */
+  const resultString = additionalElement || getSum(values)
+  if (sides) item = item.replace("$sum", resultString)
   item = item.replace("$icons", icons)
 
   /* insert item at the top of the history list */

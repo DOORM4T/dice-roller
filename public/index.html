@@ -7,15 +7,22 @@
     <!-- Bootswatch: Sketchy -->
     <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
 
-    <!-- Font Awesome -->
+    <!-- FontAwesome Icons -->
     <script src="./js/lib/fontawesome.kit.js"></script>
 
-    <!-- chance.js-->
+    <!-- Chance.js for random number generation -->
     <script src="./js/lib/chance.min.js"></script>
+
+    <!-- Redux for state management -->
+    <script src="./js/lib/redux.min.js"></script>
+
     <title>Dice Roller</title>
 </head>
 
 <body style="background-color:#333">
+    <div id="root"></div>
+    <noscript>Ouch! Something broke because JavaScript appears to be disabled!</noscript>
+
     <main class="mx-auto mt-1 position-relative" style="max-width: 650px">
         <!-- title & mute toggle -->
         <div class="pt-2 px-3 text-light d-flex flex-row justify-content-between">
@@ -35,44 +42,49 @@
             <div class="d-flex flex-row justify-content-center">
                 <!-- Num Dice Input -->
                 <span class="">
-                    <label for="num-die-input" class="d-block m-0"># Dice</label>
-                    <input id="num-die-input" class="rounded pl-3 text-center w-50" type="number" min="1" value="1"
-                        style="outline:none"></input>
-                </span>
-                <!-- Num Times to Roll -->
-                <span class="">
-                    <label for="num-times-input" class="d-block m-0"># Times</label>
-                    <input id="num-times-input" class=" rounded pl-3 text-center w-50" type="number" min="1" value="1"
+                    <label for="num-dice-input" class="d-block m-0"># Dice</label>
+                    <input id="num-dice-input" class="rounded pl-3 text-center w-50" type="number" min="1" value="1"
                         style="outline:none"></input>
                 </span>
             </div>
 
             <!-- Select d4, d6, d8, d10 -->
             <div class="col btn-group w-75 mt-4" role="group" aria-label="Choose d4, d6, d8, or d10">
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="4"><img
+                <button class="die-selector btn btn-outline-dark" data-die-sides="4"><img
                         src="./assets/dice/d4-empty.svg" width=32><br>d4</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="6"><img
+                <button class="die-selector btn btn-outline-dark" data-die-sides="6"><img
                         src="./assets/dice/d6-empty.svg" width=32><br>d6</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="8"><img
+                <button class="die-selector btn btn-outline-dark" data-die-sides="8"><img
                         src="./assets/dice/d8-empty.svg" width=32><br>d8</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="10"><img
+                <button class="die-selector btn btn-outline-dark" data-die-sides="10"><img
                         src="./assets/dice/d10-empty.svg" width=32><br>d10</button>
             </div>
             <!-- Select d12, d20, d100, dY -->
             <div class="col btn-group mt-4 w-75" role="group" aria-label="Choose d12, d20, d100, or dX">
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="12"><img
+                <button class="die-selector btn btn-outline-dark" data-die-sides="12"><img
                         src="./assets/dice/d12-empty.svg" width=32><br>d12</button>
-                <button class="die-selector btn btn-dark shadow-lg" data-die-sides="20"><img
-                        src="./assets/dice/d20-empty.svg" width=32><br>d20</button>
-                <button class="die-selector btn btn-outline-dark shadow-sm" data-die-sides="100"><img
+                <button class="die-selector btn btn-dark" data-die-sides="20"><img src="./assets/dice/d20-empty.svg"
+                        width=32><br>d20</button>
+                <button class="die-selector btn btn-outline-dark" data-die-sides="100"><img
                         src="./assets/dice/d10-empty.svg" width=32><img src="./assets/dice/d10-empty.svg"
                         width=32><br>d100</button>
                 <!-- Custom Die Button, with Input -->
-                <button id="custom-die" class="mt-4mx-auto btn btn-outline-dark shadow-sm d-flex flex-row flex-nowrap"
+                <button id="custom-die" data-die-sides="2"
+                    class="die-selector mt-4mx-auto btn btn-outline-dark d-flex flex-row flex-nowrap"
                     style="max-width:90px">
                     <label class="my-auto">d</label>
-                    <input class="ml-1 w-100 h-50 my-auto" type="number" min=2 value=2></input>
+                    <input id="custom-die-input" class="ml-1 w-100 h-50 my-auto" type="number" min=2 value=2></input>
                 </button>
+            </div>
+
+            <!-- Modifiers -->
+            <div class="col btn-group w-75 mt-4" role="group" aria-label="Choose d4, d6, d8, or d10">
+                <button class="btn btn-outline-dark">1</button>
+                <button class="btn btn-outline-dark">2</button>
+                <button class="btn btn-outline-dark">3</button>
+                <button class="btn btn-outline-dark">4</button>
+                <button class="btn btn-outline-dark">5</button>
+                <button class="btn btn-outline-dark">6</button>
             </div>
 
             <!-- Action Buttons -->
@@ -91,7 +103,7 @@
         <section class="container bg-dark shadow-sm p-0">
             <h2 class="text-center border-bottom border-dark bg-light">Results</h2>
             <ul id="rolls-history-list" class="list-unstyled text-right text-dark underline overflow-auto"
-                style="height:250px">
+                style="height:180px">
             </ul>
         </section>
 
@@ -133,6 +145,9 @@
 
 
         </div>
+
+        <script type="text/babel" src="./js/index.js"></script>
+        <script src="./js/store.js"></script>
         <script src="./js/historyItems.js"></script>
         <script src="./js/audio.js"></script>
         <script src="./js/dice.js"></script>
