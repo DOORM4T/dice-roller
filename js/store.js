@@ -22,10 +22,6 @@ const CLEAR_PREVIOUS_SUMS = "CLEAR_PREVIOUS_SUMS"
 //
 const store = Redux.createStore(stateReducer)
 
-store.subscribe(() => {
-  console.log(store.getState())
-})
-
 //
 // REDUCER
 //
