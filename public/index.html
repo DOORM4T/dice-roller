@@ -20,9 +20,6 @@
 </head>
 
 <body style="background-color:#333">
-    <div id="root"></div>
-    <noscript>Ouch! Something broke because JavaScript appears to be disabled!</noscript>
-
     <main class="mx-auto mt-1 position-relative" style="max-width: 650px">
         <!-- title & mute toggle -->
         <div class="pt-2 px-3 text-light d-flex flex-row justify-content-between">
@@ -39,7 +36,7 @@
         <!-- Dice Action -->
         <section class="p-4 my-3 container bg-light shadow-sm text-center">
             <!-- Num Dice & Num Times to Roll -->
-            <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex flex-row justify-content-center align-items-center">
                 <!-- Num Dice Input -->
                 <span class="">
                     <label for="num-dice-input" class="d-block m-0"># Dice</label>
@@ -123,20 +120,21 @@
         <div id="templates">
             <!-- History List Item -->
             <template id="history-item-template">
-                <li class="history-item d-flex flex-row justify-content-end border-light border-bottom py-2">
-                    <div class="history-dice-icons text-center mx-5">
+                <li class="history-item d-flex flex-row justify-content-between border-light border-bottom py-2">
+                    <div class="history-dice-icons text-center mx-5 d-flex flex-wrap align-items-start"
+                        style="flex:2; align-items:start">
                         $icons
                     </div>
-                    <p class="history-sum ml-auto mx-5 pr-2 text-light" style="font-size:32px">$sum</p>
+                    <p class="history-sum ml-auto mx-5 pr-2 text-light" style="flex:1; font-size:32px">$sum</p>
                 </li>
             </template>
 
             <!-- Dice Icon with a Number -->
             <template id="dice-icon-template">
-                <span class="position-relative flex flex-row justify-content-between">
-                    <span>
-                        $src
-                    </span>
+                <span class="position-relative" style="width:48px; height:48px; display:grid; place-items:center">
+                    <div>
+                        $img
+                    </div>
                     <label
                         style="font-size: 32px; letter-spacing: 2px; color:white; position:absolute; left:50%; top:50%;transform:translate(-48%,-45%)">$value
                     </label>

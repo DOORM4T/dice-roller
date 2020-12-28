@@ -99,6 +99,7 @@ addButton.addEventListener("click", () => {
 
   /* get updated list of previous sums */
   const { previousSums } = store.getState()
+  previousSums.reverse()
 
   /* roll new dice */
   const addRollResults = rollDice()

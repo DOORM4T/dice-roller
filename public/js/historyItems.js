@@ -4,7 +4,8 @@ const diceIconTemplate = document.getElementById("dice-icon-template").innerHTML
 
 const rollsHistory = document.getElementById("rolls-history-list")
 const non20validSides = [4, 6, 8, 10, 12, 100]
-const diceImg = "<img src='./assets/dice/d20-empty.svg' width=48></img>"
+const diceImg =
+  '<img src="./assets/dice/d20-empty.svg" width="48" height="48"></img>'
 const itemClassnames =
   "history-item d-flex flex-row border-light border-bottom py-2"
 
@@ -21,7 +22,7 @@ function addItem(values, sides = 20, additionalElement = "") {
       if (non20validSides.includes(sides)) {
         img = diceImg.replace("20", sides)
       }
-      template = template.replace("$src", img)
+      template = template.replace("$img", img)
       return template
     })
     .join("")
