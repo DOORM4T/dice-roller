@@ -7,6 +7,8 @@
     <!-- Bootswatch: Sketchy -->
     <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
+
     <!-- FontAwesome Icons -->
     <script src="./js/lib/fontawesome.kit.js"></script>
 
@@ -36,12 +38,21 @@
         <!-- Dice Action -->
         <section class="p-4 my-3 container bg-light shadow-sm text-center">
             <!-- Num Dice & Num Times to Roll -->
-            <div class="d-flex flex-row justify-content-center align-items-center">
+            <div class="d-flex flex-row justify-content-center align-items-center container w-75">
                 <!-- Num Dice Input -->
-                <span class="">
+                <span style="flex:1">
                     <label for="num-dice-input" class="d-block m-0"># Dice</label>
                     <input id="num-dice-input" class="rounded pl-3 text-center w-50" type="number" min="1" value="1"
                         style="outline:none"></input>
+                </span>
+
+                <span style="flex:1">
+                    <label for="modifiers-select" class="d-block m-0 mr-4">Modifier</label>
+                    <input list="modifiers-list" name="modifiers-select" id="modifiers-select"
+                        placeholder="Select Modifer" class="rounded mr-4 text-center pl-3" style="flex:2;outline:none ">
+                    <datalist id="modifiers-list">
+                        <option value="None [+0]">
+                    </datalist>
                 </span>
             </div>
 
@@ -60,8 +71,8 @@
             <div class="col btn-group mt-4 w-75" role="group" aria-label="Choose d12, d20, d100, or dX">
                 <button class="die-selector btn btn-outline-dark" data-die-sides="12"><img
                         src="./assets/dice/d12-empty.svg" width=32><br>d12</button>
-                <button class="die-selector btn btn-dark" data-die-sides="20"><img src="./assets/dice/d20-empty.svg"
-                        width=32><br>d20</button>
+                <button class="die-selector btn btn-outline-dark" data-die-sides="20"><img
+                        src="./assets/dice/d20-empty.svg" width=32><br>d20</button>
                 <button class="die-selector btn btn-outline-dark" data-die-sides="100"><img
                         src="./assets/dice/d10-empty.svg" width=32><img src="./assets/dice/d10-empty.svg"
                         width=32><br>d100</button>
@@ -74,26 +85,18 @@
                 </button>
             </div>
 
-            <!-- Modifiers -->
-            <!-- <div class="col btn-group w-75 mt-4" role="group" aria-label="Choose d4, d6, d8, or d10">
-                <button class="btn btn-outline-dark">1</button>
-                <button class="btn btn-outline-dark">2</button>
-                <button class="btn btn-outline-dark">3</button>
-                <button class="btn btn-outline-dark">4</button>
-                <button class="btn btn-outline-dark">5</button>
-                <button class="btn btn-outline-dark">6</button>
-            </div> -->
 
             <!-- Action Buttons -->
             <div class="row w-75 mx-auto mt-4">
-                <div class="col btn-group" role="group" aria-label="Roll anew or add the roll to existing rolls">
-                    <button id="roll-button" class="h6 btn btn-success px-3">Roll</button>
-                    <button id="add-button" class="h6 btn btn-info px-3">Add</button>
-                    <button id="clear-button" class="h6 btn btn-danger px-3">Clear</button>
+                <div class="col btn-group" role="group" aria-label="option buttons">
+                    <button id="roll-button" class="h6 btn btn-success px-3" aria-label="Roll anew">Roll</button>
+                    <button id="add-button" class="h6 btn btn-info px-3"
+                        aria-label="Add a roll to existing rolls">Add</button>
+                    <button id="clear-button" class="h6 btn btn-danger px-3"
+                        aria-label="Clear previous roll results">Clear</button>
                 </div>
             </div>
         </section>
-
 
 
         <!-- Roll Results -->
@@ -103,6 +106,53 @@
                 style="height:180px">
             </ul>
         </section>
+
+        <div class="col btn-group w-100 d-flex flex-row" role="group" aria-label="Additional settings">
+            <button class="btn btn-outline-light" style="flex:4" type="button" data-toggle="modal"
+                data-target="#edit-modifiers-modal" aria-controls="collapseExample">
+                &#8597; Edit Modifiers
+            </button>
+            <button id="reset-button" class="btn btn-outline-danger text-light px-3 ml-2"
+                style="flex:1; border-style:dashed" aria-label="Reset all dice roller options to their defaults">Reset
+                ALL</button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal" id="edit-modifiers-modal" tabindex="-1" role="dialog" aria-labelledby="edit modifiers"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Modifiers</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="max-height:50vh; overflow-y:scroll">
+                        <button id="add-modifier-button" class="btn btn-success w-100 mb-3" type="button">
+                            New Modifier
+                        </button>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Modifer Name</th>
+                                    <th scope="col">Modifier Bonus</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="modifier-rows">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Hidden. Play when user rolls a die/dice -->
         <audio id="sfx">
@@ -121,17 +171,17 @@
             <!-- History List Item -->
             <template id="history-item-template">
                 <li class="history-item d-flex flex-row justify-content-between border-light border-bottom py-2">
-                    <div class="history-dice-icons text-center mx-5 d-flex flex-wrap align-items-start"
-                        style="flex:2; align-items:start">
+                    <div class="history-dice-icons ml-5 mr-2 d-flex flex-grow-0 flex-wrap"
+                        style="flex-basis: 150px; align-content:flex-start">
                         $icons
                     </div>
-                    <p class="history-sum ml-auto mx-5 pr-2 text-light" style="flex:1; font-size:32px">$sum</p>
+                    <p class="history-sum ml-auto mr-5 pr-2 text-light" style="flex:2; font-size:32px">$sum</p>
                 </li>
             </template>
 
             <!-- Dice Icon with a Number -->
             <template id="dice-icon-template">
-                <span class="position-relative" style="width:48px; height:48px; display:grid; place-items:center">
+                <span class="position-relative" style="width:48px; height:48px; display:grid; place-items:center;">
                     <div>
                         $img
                     </div>
@@ -148,6 +198,9 @@
         <script src="./js/historyItems.js"></script>
         <script src="./js/audio.js"></script>
         <script src="./js/dice.js"></script>
+
+
+        <script src="./js/modifiers.js"></script>
 </body>
 
 </html>

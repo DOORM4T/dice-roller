@@ -1,9 +1,13 @@
-const initialState = {
+/* load initial state from a default object or from local storage */
+const STATE_KEY = "STATE"
+const localStorageState = JSON.parse(localStorage.getItem(STATE_KEY))
+const defaultState = {
   numDice: 1,
   numSides: 20,
   results: [],
   previousSums: [],
 }
+const initialState = localStorageState || defaultState
 
 //
 // ACTION CONSTANTS
@@ -21,6 +25,11 @@ const CLEAR_PREVIOUS_SUMS = "CLEAR_PREVIOUS_SUMS"
 // STORE
 //
 const store = Redux.createStore(stateReducer)
+
+store.subscribe(() => {
+  const state = JSON.stringify(store.getState())
+  localStorage.setItem(STATE_KEY, state)
+})
 
 //
 // REDUCER

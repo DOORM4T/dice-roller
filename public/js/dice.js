@@ -74,7 +74,9 @@ customDieInput.addEventListener("change", () => {
 // ROLL BUTTON
 //
 const rollButton = document.getElementById("roll-button")
-rollButton.addEventListener("click", () => {
+rollButton.addEventListener("click", rollNewDice)
+
+function rollNewDice() {
   /* roll dice, clearing prior results */
   const { numSides } = store.getState()
   store.dispatch(clearResults())
@@ -82,14 +84,16 @@ rollButton.addEventListener("click", () => {
 
   const results = rollDice()
   addItem(results, numSides)
-})
+}
 
 //
 // ADD BUTTON
 //
 const addButton = document.getElementById("add-button")
 /* roll an additional die, adding the result to the existing results */
-addButton.addEventListener("click", () => {
+addButton.addEventListener("click", addDice)
+
+function addDice() {
   const { results, numSides } = store.getState()
 
   /* add previous roll to list of previous sums */
@@ -113,7 +117,7 @@ addButton.addEventListener("click", () => {
     " + ",
   )}</span>`
   addItem(addRollResults, numSides, sumString)
-})
+}
 
 //
 // CLEAR BUTTON
@@ -177,4 +181,34 @@ function rollDice() {
 function getSum(values) {
   /* sum of the results array state */
   return values.reduce((prev, next) => prev + next, 0)
+}
+
+//
+// GUI INITIALIZATION FROM SAVED STATE
+//
+initializeFromState(store.getState())
+
+/**
+ * InitializeGUI appearances based on state
+ * @param {{numDice: 1, numSides: 20, results: [], previousSums: []}} state
+ */
+function initializeFromState(state) {
+  /* initialize #dice input */
+  const numDiceInput = document.getElementById("num-dice-input")
+  numDiceInput.value = state.numDice
+
+  /* initialize selected die selector */
+  let dieSelector = document.querySelector(
+    `[data-die-sides="${state.numSides}"]`,
+  )
+
+  if (!dieSelector) {
+    dieSelector = document.getElementById("custom-die")
+    dieSelector.setAttribute("data-die-sides", state.numSides)
+
+    const customDieInput = document.getElementById("custom-die-input")
+    customDieInput.value = state.numSides
+  }
+
+  dieSelector.click()
 }
