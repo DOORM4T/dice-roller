@@ -70,26 +70,48 @@ customDieInput.addEventListener("change", () => {
   customDieInput.blur()
 })
 
+//TODO:Refactor buttons to separate folder
+//TODO: Implement RESET ALL BUTTON
+
 //
 // ROLL BUTTON
 //
 const rollButton = document.getElementById("roll-button")
-rollButton.addEventListener("click", () => {
+rollButton.addEventListener("click", rollNewDice)
+
+function rollNewDice() {
   /* roll dice, clearing prior results */
-  const { numSides } = store.getState()
+  const { numSides, modifier } = store.getState()
   store.dispatch(clearResults())
   store.dispatch(clearPreviousSums())
 
-  const results = rollDice()
-  addItem(results, numSides)
-})
+  /* add non-zero modifier */
+  let modifierString = ""
+  let absBonus = Math.abs(modifier.bonus) /* absolute value of the bonus */
+  if (modifier.bonus !== 0) {
+    const sign = modifier.bonus > 0 ? "+" : "-"
+    modifierString = ` ${sign} ${absBonus} [${modifier.name}]`
+  }
+
+  const rolls = rollDice()
+  const sum = getSum(rolls)
+  const resultString =
+    absBonus !== 0
+      ? `${
+          sum + absBonus
+        }<br> = <span style="color:#AAA">${sum}${modifierString}</span>`
+      : String(sum)
+  addItem(rolls, numSides, resultString)
+}
 
 //
 // ADD BUTTON
 //
 const addButton = document.getElementById("add-button")
 /* roll an additional die, adding the result to the existing results */
-addButton.addEventListener("click", () => {
+addButton.addEventListener("click", addDice)
+
+function addDice() {
   const { results, numSides } = store.getState()
 
   /* add previous roll to list of previous sums */
@@ -113,7 +135,7 @@ addButton.addEventListener("click", () => {
     " + ",
   )}</span>`
   addItem(addRollResults, numSides, sumString)
-})
+}
 
 //
 // CLEAR BUTTON
@@ -177,4 +199,34 @@ function rollDice() {
 function getSum(values) {
   /* sum of the results array state */
   return values.reduce((prev, next) => prev + next, 0)
+}
+
+//
+// GUI INITIALIZATION FROM SAVED STATE
+//
+initializeFromState(store.getState())
+
+/**
+ * InitializeGUI appearances based on state
+ * @param {{numDice: 1, numSides: 20, results: [], previousSums: []}} state
+ */
+function initializeFromState(state) {
+  /* initialize #dice input */
+  const numDiceInput = document.getElementById("num-dice-input")
+  numDiceInput.value = state.numDice
+
+  /* initialize selected die selector */
+  let dieSelector = document.querySelector(
+    `[data-die-sides="${state.numSides}"]`,
+  )
+
+  if (!dieSelector) {
+    dieSelector = document.getElementById("custom-die")
+    dieSelector.setAttribute("data-die-sides", state.numSides)
+
+    const customDieInput = document.getElementById("custom-die-input")
+    customDieInput.value = state.numSides
+  }
+
+  dieSelector.click()
 }
