@@ -87,18 +87,19 @@ function rollNewDice() {
 
   /* add non-zero modifier */
   let modifierString = ""
-  let absBonus = Math.abs(modifier.bonus) /* absolute value of the bonus */
+  let modifierBonus = modifier.bonus /* absolute value of the bonus */
   if (modifier.bonus !== 0) {
     const sign = modifier.bonus > 0 ? "+" : "-"
+    const absBonus = Math.abs(modifier.bonus)
     modifierString = ` ${sign} ${absBonus} [${modifier.name}]`
   }
 
   const rolls = rollDice()
   const sum = getSum(rolls)
   const resultString =
-    absBonus !== 0
+    modifierBonus !== 0
       ? `${
-          sum + absBonus
+          sum + modifierBonus
         }<br> = <span style="color:#AAA">${sum}${modifierString}</span>`
       : String(sum)
   addItem(rolls, numSides, resultString)
