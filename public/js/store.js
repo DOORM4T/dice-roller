@@ -6,6 +6,11 @@ const defaultState = {
   numSides: 20,
   results: [],
   previousSums: [],
+  modifier: {
+    name: "",
+    bonus: 0,
+  },
+  modifierEntries: [],
 }
 const initialState = localStorageState || defaultState
 
@@ -21,12 +26,17 @@ const ADD_PREVIOUS_SUM = "ADD_PREVIOUS_SUM"
 const CLEAR_RESULTS = "CLEAR_RESULTS"
 const CLEAR_PREVIOUS_SUMS = "CLEAR_PREVIOUS_SUMS"
 
+const SET_MODIFIER = "SET_MODIFIER"
+const SET_MODIFIER_ENTRIES = "SET_MODIFIER_ENTRIES"
+
 //
 // STORE
 //
 const store = Redux.createStore(stateReducer)
 
 store.subscribe(() => {
+  console.log(store.getState())
+
   const state = JSON.stringify(store.getState())
   localStorage.setItem(STATE_KEY, state)
 })
@@ -57,6 +67,16 @@ function stateReducer(state = initialState, action) {
       return {
         ...state,
         previousSums: [],
+      }
+    case SET_MODIFIER:
+      return {
+        ...state,
+        modifier: payload.modifier,
+      }
+    case SET_MODIFIER_ENTRIES:
+      return {
+        ...state,
+        modifierEntries: payload.modifierEntries,
       }
     default:
       return state
@@ -116,9 +136,16 @@ function clearPreviousSums() {
   }
 }
 
-// store.dispatch(setDieSides(6))
-// store.dispatch(addResult(24))
-// store.dispatch(addResult(25))
-// store.dispatch(addPreviousSum(1))
-// store.dispatch(addPreviousSum(2))
-// store.dispatch(addPreviousSum(3))
+function setModifier(modifier) {
+  return {
+    type: SET_MODIFIER,
+    payload: { modifier },
+  }
+}
+
+function setModifierEntries(modifierEntries) {
+  return {
+    type: SET_MODIFIER_ENTRIES,
+    payload: { modifierEntries },
+  }
+}

@@ -1,27 +1,41 @@
-// TODO: manage modifiers state with Redux
-// TODO: refactor to pure functions
-let modifierState = JSON.parse(localStorage.getItem("modifierState")) || []
-
+/* DOM Elements */
 const modifierRows = document.querySelectorAll(".modifier-row")
 
 const OPTION_LENGTH_CUT_OFF = 30
-const DEFAULT_MODIFIER_VALUE = "[+0] No Modifier"
+const DEFAULT_MODIFIER_NAME = "No Modifier"
+const DEFAULT_MODIFIER_BONUS = 0
+const DEFAULT_MODIFIER_OPTION = `[+${DEFAULT_MODIFIER_BONUS}] ${DEFAULT_MODIFIER_NAME}`
 const modifiersDataList = document.getElementById("modifiers-list")
 const modifiersSelect = document.getElementById("modifiers-select")
-
-/* DYNAMICALLY ADD A MODIFIER ROW */
 const modifierRowsSection = document.getElementById("modifier-rows")
 const addModifierButton = document.getElementById("add-modifier-button")
+const tableContainer = document.getElementById("table-container")
+
+/* set initial state from local storage or a default empty array */
+const localStorageEntries = JSON.parse(localStorage.getItem(STATE_KEY))
+  .modifierEntries
+let modifierEntries = localStorageEntries || []
+
+/* update global state store */
+store.dispatch(setModifierEntries(modifierEntries))
+store.dispatch(
+  setModifier({ name: DEFAULT_MODIFIER_NAME, bonus: DEFAULT_MODIFIER_BONUS }),
+)
+
+/* Add New Modifier */
 addModifierButton.addEventListener("click", () => {
   addRow()
+  tableContainer.scrollTo({ top: 0 })
 })
 
-if (modifierState.length === 0) {
+/* Initialization */
+if (modifierEntries.length === 0) {
   /* table is empty; add a default row */
   addRow()
 } else {
   /* render the table from existing row data */
-  modifierState.forEach((row) => {
+  const rows = store.getState().modifierEntries || []
+  rows.forEach((row) => {
     addRow(true, row)
   })
 }
@@ -40,72 +54,78 @@ function addRow(isFromStorage = false, row) {
   /* create the row element */
   const rowElement = document.createElement("tr")
   rowElement.classList.add("modifier-row")
-  rowElement.innerHTML = `<td contenteditable>${name}</td><td><input type="number" value=${modifier}></td><td><button class="btn btn-outline-danger">&#10008;</button></td>`
+  rowElement.innerHTML = `<td><input type="text" class="modifier-name" value="${name}"></td><td><input class="modifier-input" type="number" value="${modifier}"></td><td><button class="delete-modifier-button btn btn-outline-danger">&#10008;</button></td>`
   modifierRowsSection.insertBefore(
     rowElement,
     modifierRowsSection.childNodes[0],
   )
-  updateDataListOptions()
 
+  updateDataListOptions()
   const rowContent = row || { name, modifier }
 
   if (!isFromStorage) {
     /* add the value to state & add to local storage */
-    modifierState.push(rowContent)
-    console.log(rowContent)
-    storeLocally()
+    modifierEntries.push(rowContent)
+    store.dispatch(setModifierEntries(modifierEntries))
   }
 
   /* handle name field change */
-  const modifierDiv = rowElement.children[0]
-  modifierDiv.addEventListener("keyup", () => {
-    rowContent.name = modifierDiv.textContent.trim()
+  const modifierNameInput = rowElement.querySelector(".modifier-name")
+  modifierNameInput.select()
 
-    console.log(rowContent)
+  modifierNameInput.addEventListener("change", () => {
+    rowContent.name = modifierNameInput.value
+
     updateDataListOptions()
-    storeLocally()
+    store.dispatch(setModifierEntries(modifierEntries))
+  })
+
+  modifierNameInput.addEventListener("focus", () => {
+    modifierNameInput.select()
   })
 
   /* handle modifier field change */
-  const modifierInput = rowElement.children[1]
-  modifierInput.addEventListener("keyup", (e) => {
+  const modifierInput = rowElement.querySelector(".modifier-input")
+  modifierInput.addEventListener("change", (e) => {
     rowContent.modifier = +e.target.value
 
     updateDataListOptions()
-    storeLocally()
+    store.dispatch(setModifierEntries(modifierEntries))
+  })
+
+  modifierInput.addEventListener("focus", () => {
+    modifierInput.select()
   })
 
   /* handle delete button click */
-  const deleteButton = rowElement.children[2]
+  const deleteButton = rowElement.querySelector(".delete-modifier-button")
   deleteButton.addEventListener("click", () => {
     // const doDelete = confirm(`Delete [${rowContent.name}] modifier?`)
     // if (!doDelete) return
 
-    modifierState = modifierState.filter((_, i) => i !== index)
+    modifierEntries = modifierEntries.filter((_, i) => i !== index)
     rowElement.remove()
 
     updateDataListOptions()
-    storeLocally()
+    store.dispatch(setModifierEntries(modifierEntries))
   })
-}
-
-function storeLocally() {
-  const data = JSON.stringify(modifierState)
-  localStorage.setItem("modifierState", data)
 }
 
 //
 // MODIFIERS DATA LIST
 //
+/* populates the data list with options based modifiers state */
 function updateDataListOptions() {
-  modifiersSelect.value = DEFAULT_MODIFIER_VALUE
+  /* initial No-Modifier option */
+  modifiersSelect.value = DEFAULT_MODIFIER_OPTION
   modifiersDataList.innerHTML = ""
 
   const defaultOption = document.createElement("option")
-  defaultOption.value = DEFAULT_MODIFIER_VALUE
+  defaultOption.value = DEFAULT_MODIFIER_OPTION
   modifiersDataList.appendChild(defaultOption)
 
-  const modifierOptions = modifierState.map(({ name, modifier }) => {
+  /* generate options based on modifier entries state */
+  const modifierOptions = modifierEntries.map(({ name, modifier }) => {
     const modifierString = modifier < 0 ? `${modifier}` : `+${modifier}`
     const optionName = `[${modifierString}] ${name}`
     const lengthLimitedName =
@@ -118,6 +138,7 @@ function updateDataListOptions() {
     return optionEl
   })
 
+  /* sort options alphabetically */
   const alphaSortedOptions = modifierOptions.sort((a, b) => {
     const aString = a.value.substring(a.value.indexOf("["), a.value.length)
     const bString = b.value.substring(b.value.indexOf("["), b.value.length)
@@ -143,6 +164,22 @@ modifiersSelect.addEventListener("focus", () => {
 })
 
 modifiersSelect.addEventListener("change", () => {
+  /* extract modifier details from the selected option name  */
+  const optionName = modifiersSelect.value
+
+  /* bonus number */
+  const afterLeftBracketIndex = optionName.indexOf("[") + 1
+  const rightBracketIndex = optionName.indexOf("]")
+  const bonus = Number(
+    optionName.slice(afterLeftBracketIndex, rightBracketIndex),
+  )
+  console.log(bonus)
+
+  /* modifier name */
+  const name = optionName.slice(rightBracketIndex + 1, optionName.length).trim()
+  console.log(name)
+
+  store.dispatch(setModifier({ name, bonus }))
   modifiersSelect.blur()
 })
 

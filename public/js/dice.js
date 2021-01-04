@@ -70,6 +70,9 @@ customDieInput.addEventListener("change", () => {
   customDieInput.blur()
 })
 
+//TODO:Refactor buttons to separate folder
+//TODO: Implement RESET ALL BUTTON
+
 //
 // ROLL BUTTON
 //
@@ -78,12 +81,27 @@ rollButton.addEventListener("click", rollNewDice)
 
 function rollNewDice() {
   /* roll dice, clearing prior results */
-  const { numSides } = store.getState()
+  const { numSides, modifier } = store.getState()
   store.dispatch(clearResults())
   store.dispatch(clearPreviousSums())
 
-  const results = rollDice()
-  addItem(results, numSides)
+  /* add non-zero modifier */
+  let modifierString = ""
+  let absBonus = Math.abs(modifier.bonus) /* absolute value of the bonus */
+  if (modifier.bonus !== 0) {
+    const sign = modifier.bonus > 0 ? "+" : "-"
+    modifierString = ` ${sign} ${absBonus} [${modifier.name}]`
+  }
+
+  const rolls = rollDice()
+  const sum = getSum(rolls)
+  const resultString =
+    absBonus !== 0
+      ? `${
+          sum + absBonus
+        }<br> = <span style="color:#AAA">${sum}${modifierString}</span>`
+      : String(sum)
+  addItem(rolls, numSides, resultString)
 }
 
 //

@@ -21,7 +21,7 @@
     <title>Dice Roller</title>
 </head>
 
-<body style="background-color:#333">
+<body style="background-color:#333;">
     <main class="mx-auto mt-1 position-relative" style="max-width: 650px">
         <!-- title & mute toggle -->
         <div class="pt-2 px-3 text-light d-flex flex-row justify-content-between">
@@ -89,11 +89,13 @@
             <!-- Action Buttons -->
             <div class="row w-75 mx-auto mt-4">
                 <div class="col btn-group" role="group" aria-label="option buttons">
-                    <button id="roll-button" class="h6 btn btn-success px-3" aria-label="Roll anew">Roll</button>
+                    <button id="roll-button" class="h6 btn btn-success px-3" aria-label="Roll anew"
+                        title="Roll dice">Roll</button>
                     <button id="add-button" class="h6 btn btn-info px-3"
-                        aria-label="Add a roll to existing rolls">Add</button>
-                    <button id="clear-button" class="h6 btn btn-danger px-3"
-                        aria-label="Clear previous roll results">Clear</button>
+                        aria-label="Add a roll to existing rolls without modifiers"
+                        title="Add without modifiers">Add</button>
+                    <button id="clear-button" class="h6 btn btn-danger px-3" aria-label="Clear previous roll results"
+                        title="Clear roll history">Clear</button>
                 </div>
             </div>
         </section>
@@ -107,12 +109,15 @@
             </ul>
         </section>
 
-        <div class="col btn-group w-100 d-flex flex-row" role="group" aria-label="Additional settings">
+        <!-- Additional Settings Buttons -->
+        <div class="container btn-group w-100 d-flex flex-row" style="bottom:0" role="group"
+            aria-label="Additional settings">
             <button class="btn btn-outline-light" style="flex:4" type="button" data-toggle="modal"
-                data-target="#edit-modifiers-modal" aria-controls="collapseExample">
+                data-target="#edit-modifiers-modal" aria-controls="collapseExample"
+                title="Will open the modifier editing panel">
                 &#8597; Edit Modifiers
             </button>
-            <button id="reset-button" class="btn btn-outline-danger text-light px-3 ml-2"
+            <button id="reset-button" disabled class=" btn btn-outline-danger text-light px-3 ml-2"
                 style="flex:1; border-style:dashed" aria-label="Reset all dice roller options to their defaults">Reset
                 ALL</button>
         </div>
@@ -128,23 +133,23 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" style="max-height:50vh; overflow-y:scroll">
+                    <div class="modal-body">
                         <button id="add-modifier-button" class="btn btn-success w-100 mb-3" type="button">
                             New Modifier
                         </button>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Modifer Name</th>
-                                    <th scope="col">Modifier Bonus</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
+                        <div id="table-container" class="container" style="max-height:50vh; overflow-y:scroll">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Modifer Name</th>
+                                        <th scope="col">Modifier Bonus</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modifier-rows"></tbody>
+                            </table>
+                        </div>
 
-                            <tbody id="modifier-rows">
-
-                            </tbody>
-                        </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
