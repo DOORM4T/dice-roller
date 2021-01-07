@@ -71,7 +71,6 @@ customDieInput.addEventListener("change", () => {
 })
 
 //TODO:Refactor buttons to separate folder
-//TODO: Implement RESET ALL BUTTON
 
 //
 // ROLL BUTTON

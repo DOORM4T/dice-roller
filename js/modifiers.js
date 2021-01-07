@@ -173,11 +173,9 @@ modifiersSelect.addEventListener("change", () => {
   const bonus = Number(
     optionName.slice(afterLeftBracketIndex, rightBracketIndex),
   )
-  console.log(bonus)
 
   /* modifier name */
   const name = optionName.slice(rightBracketIndex + 1, optionName.length).trim()
-  console.log(name)
 
   store.dispatch(setModifier({ name, bonus }))
   modifiersSelect.blur()

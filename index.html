@@ -7,7 +7,7 @@
     <!-- Bootswatch: Sketchy -->
     <link rel="stylesheet" href="./assets/styles/bootstrap.min.css">
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/lib/bootstrap.bundle.min.js"></script>
 
     <!-- FontAwesome Icons -->
     <script src="./js/lib/fontawesome.kit.js"></script>
@@ -38,9 +38,9 @@
         <!-- Dice Action -->
         <section class="p-4 my-3 container bg-light shadow-sm text-center">
             <!-- Num Dice & Num Times to Roll -->
-            <div class="d-flex flex-row justify-content-center align-items-center container w-75">
+            <div class=" d-flex flex-row justify-content-center align-items-center container w-75">
                 <!-- Num Dice Input -->
-                <span style="flex:1">
+                <span style="flex:1;min-width:130px">
                     <label for="num-dice-input" class="d-block m-0"># Dice</label>
                     <input id="num-dice-input" class="rounded pl-3 text-center w-50" type="number" min="1" value="1"
                         style="outline:none"></input>
@@ -117,7 +117,7 @@
                 title="Will open the modifier editing panel">
                 &#8597; Edit Modifiers
             </button>
-            <button id="reset-button" disabled class=" btn btn-outline-danger text-light px-3 ml-2"
+            <button id="reset-button" class=" btn btn-outline-danger text-light px-3 ml-2"
                 style="flex:1; border-style:dashed" aria-label="Reset all dice roller options to their defaults">Reset
                 ALL</button>
         </div>
@@ -203,6 +203,7 @@
         <script src="./js/historyItems.js"></script>
         <script src="./js/audio.js"></script>
         <script src="./js/dice.js"></script>
+        <script src="./js/reset.js"></script>
 
 
         <script src="./js/modifiers.js"></script>

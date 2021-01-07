@@ -29,6 +29,8 @@ const CLEAR_PREVIOUS_SUMS = "CLEAR_PREVIOUS_SUMS"
 const SET_MODIFIER = "SET_MODIFIER"
 const SET_MODIFIER_ENTRIES = "SET_MODIFIER_ENTRIES"
 
+const RESET_STATE = "RESET_STATE"
+
 //
 // STORE
 //
@@ -77,6 +79,10 @@ function stateReducer(state = initialState, action) {
       return {
         ...state,
         modifierEntries: payload.modifierEntries,
+      }
+    case RESET_STATE:
+      return {
+        ...defaultState,
       }
     default:
       return state
@@ -147,5 +153,12 @@ function setModifierEntries(modifierEntries) {
   return {
     type: SET_MODIFIER_ENTRIES,
     payload: { modifierEntries },
+  }
+}
+
+function resetState() {
+  return {
+    type: RESET_STATE,
+    payload: null,
   }
 }
