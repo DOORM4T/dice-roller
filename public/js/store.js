@@ -37,7 +37,7 @@ const RESET_STATE = "RESET_STATE"
 const store = Redux.createStore(stateReducer)
 
 store.subscribe(() => {
-  console.log(store.getState())
+  // console.log(store.getState())
 
   const state = JSON.stringify(store.getState())
   localStorage.setItem(STATE_KEY, state)
